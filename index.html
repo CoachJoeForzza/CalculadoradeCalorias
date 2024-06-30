@@ -18,11 +18,16 @@
             overflow: hidden;
         }
         header {
-            background: #003366;
+            background: #0A3299;
             color: #fff;
             padding-top: 30px;
             min-height: 70px;
-            border-bottom: #ff6600 3px solid;
+            border-bottom: #FE6603 3px solid;
+            text-align: center;
+        }
+        header img {
+            max-width: 150px;
+            margin: 0 auto;
         }
         header h1 {
             text-align: center;
@@ -49,12 +54,12 @@
             border-radius: 5px;
         }
         button {
-            background: #003366;
+            background: #0A3299;
             color: #fff;
             cursor: pointer;
         }
         button:hover {
-            background: #ff6600;
+            background: #FE6603;
         }
         .result {
             background: #fff;
@@ -63,15 +68,29 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .social-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .social-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #0A3299;
+        }
+        .social-links a:hover {
+            color: #FE6603;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
+            <img src="logo.jpg" alt="Logo de Coach Joe Forzza">
             <h1>Calculadora de Calorías de Coach Joe Forzza</h1>
         </div>
     </header>
     <div class="container">
+        <p>Utilice la calculadora TDEE para conocer su gasto energético diario total, una medida de cuántas calorías quema por día. ¡Esta calculadora de calorías también mostrará tu IMC, TMB, macros y muchas otras estadísticas útiles!</p>
         <form id="calorieForm">
             <label for="weight">Peso (kg):</label>
             <input type="number" id="weight" name="weight" step="any" required>
@@ -104,10 +123,23 @@
                 <option value="super_active">Súper activo (ejercicio muy duro/trabajo físico)</option>
             </select>
 
+            <label for="macroRatio">Distribución de macros:</label>
+            <select id="macroRatio" name="macroRatio" required>
+                <option value="30-30-40">Moderado en carbohidratos (30% proteínas, 30% grasas, 40% carbohidratos)</option>
+                <option value="40-40-20">Bajo en carbohidratos (40% proteínas, 40% grasas, 20% carbohidratos)</option>
+                <option value="30-20-50">Alto en carbohidratos (30% proteínas, 20% grasas, 50% carbohidratos)</option>
+            </select>
+
             <button type="button" onclick="calculateCalories()">Calcular</button>
         </form>
 
         <div id="result" class="result"></div>
+        
+        <div class="social-links">
+            <h3>Sígueme en las redes sociales</h3>
+            <a href="https://www.instagram.com/forzzaclub/" target="_blank">Instagram</a>
+            <a href="https://www.facebook.com/profile.php?id=100010285868756" target="_blank">Facebook</a>
+        </div>
     </div>
 
     <script>
@@ -118,6 +150,7 @@
             var gender = document.getElementById('gender').value;
             var goal = document.getElementById('goal').value;
             var activity = document.getElementById('activity').value;
+            var macroRatio = document.getElementById('macroRatio').value;
 
             var bmr;
             if (gender === 'male') {
@@ -158,12 +191,24 @@
                     break;
             }
 
+            var macroPercentages = macroRatio.split('-');
+            var protein = (calories * (macroPercentages[0] / 100)).toFixed(2);
+            var fat = (calories * (macroPercentages[1] / 100)).toFixed(2);
+            var carbs = (calories * (macroPercentages[2] / 100)).toFixed(2);
+
             document.getElementById('result').innerHTML = 
                 '<h2>Resultado:</h2>' +
                 '<p>Tu TMB es ' + bmr.toFixed(2) + ' calorías/día.</p>' +
                 '<p>Para ' + (goal === 'lose' ? 'perder peso' : goal === 'gain' ? 'ganar peso' : 'mantener tu peso') + 
-                ', necesitas consumir aproximadamente ' + calories.toFixed(2) + ' calorías/día.</p>';
+                ', necesitas consumir aproximadamente ' + calories.toFixed(2) + ' calorías/día.</p>' +
+                '<p>Distribución de macros:</p>' +
+                '<ul>' +
+                '<li>Proteínas: ' + protein + ' calorías (' + macroPercentages[0] + '%)</li>' +
+                '<li>Grasas: ' + fat + ' calorías (' + macroPercentages[1] + '%)</li>' +
+                '<li>Carbohidratos: ' + carbs + ' calorías (' + macroPercentages[2] + '%)</li>' +
+                '</ul>';
         }
     </script>
 </body>
 </html>
+
